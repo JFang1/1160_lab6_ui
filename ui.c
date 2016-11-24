@@ -35,10 +35,10 @@ static int lightChange(void);
 
 
 
-//TODO: handle the polling, decoding, and debouncing of the keypad--Even then, there still may be hardware needed to be debounced
+//TODO: Handle the polling, decoding, and debouncing of the keypad--Even then, there still may be hardware needed to be debounced
 
 int main() {
-  lcd = fopen(COL, "w");
+  lcd = fopen(COL, "w");  ///////////////TODO: I have no idea if this is right or not
   initColumns();
   logIn();
   menu();
@@ -46,7 +46,7 @@ int main() {
   return 0;
 }
 
-void initColumns() { /////////////////////
+void initColumns() { /////////////////////TODO
   return;
 }
 
@@ -57,31 +57,37 @@ int getKey() {
 
 void logIn() (
   int i = 1;
+  int logInKeyValue;
+  fprintf(lcd, "Enter Password:");
   while (i) {
-    /// if wrong password
+    logInKeyValue = getKey();
+    if (logInKeyValue != PASS)
     {
       logInError();
     }
+    else { // then the password was entered correctly--exit while loop
+      i = 0;
+    }
   }
-
   return;
 )
 
 void logInError() {
-  printf("Incorrect");
-  pause(1000); ////////////////////
+  fprintf(lcd, "Incorrect");
+  sleep(2); // waits for 2 seconds
   return;
 }
 
 void menu() {
-  fprintf("Press: 1 temp 2 light 3 logout");
+  fprintf(lcd, "Press: 1 temp 2 light 3 logout");
   int menuKeyValue = getKey();  ////////////////////// TODO: might need some kind of loop for waiting for user input
   if (menuKeyValue == 1) {
     tempMenu();
   }
-  if (menuKeyValue == 2) {
+  else if (menuKeyValue == 2) {
     lightMenu();
   }
+  else if (menuKeyValue == 3 || menuKeyValue == )
   return;
 }
 
