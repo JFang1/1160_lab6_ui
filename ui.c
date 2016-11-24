@@ -41,7 +41,8 @@ int main() {
   lcd = fopen(COL, "w");  ///////////////TODO: I have no idea if this is right or not
   initColumns();
   logIn();
-  menu();
+  fprintf(lcd, "Goodbye!");
+  sleep(2);
   fclose(lcd);
   return 0;
 }
@@ -51,7 +52,7 @@ void initColumns() { /////////////////////TODO
 }
 
 int getKey() {
-  int keyValue = scanf(lcd);
+  int keyValue = fscanf(lcd);
   return keyValue;
 }
 
@@ -61,12 +62,16 @@ void logIn() (
   fprintf(lcd, "Enter Password:");
   while (i) {
     logInKeyValue = getKey();
-    if (logInKeyValue != PASS)
+    if (logInKeyValue == ESC) {
+      return;
+    }
+    else if (logInKeyValue != PASS)
     {
       logInError();
     }
     else { // then the password was entered correctly--exit while loop
       i = 0;
+      menu(); // This is called here because it should be accessible only to those who enter the password correctly;
     }
   }
   return;
@@ -87,7 +92,7 @@ void menu() {
   else if (menuKeyValue == 2) {
     lightMenu();
   }
-  else if (menuKeyValue == 3 || menuKeyValue == )
+  else if (menuKeyValue == 3 || menuKeyValue == ESC)
   return;
 }
 
