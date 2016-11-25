@@ -34,8 +34,9 @@ static int tempChange (void);
 static void lightCurrent(int light);
 static int lightChange(void);
 
-int currentTemp;
-int currentLight;
+enum lightSettings = {Off, Low, Medium, High};
+int currentTemp = 0;
+int currentLight = Off;
 
 
 
