@@ -26,6 +26,7 @@ static void initColumns();
 static int getKey();
 static void logIn(void);
 static void logInError(void);
+static void invalidInput(void);
 static void menu(void);
 static void tempMenu(void);
 static void lightMenu(void);
@@ -92,6 +93,13 @@ void logInError() {
   return;
 }
 
+void invalidInput() {
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "invalidInput");
+  sleep(2); // waits for 2 seconds--I'm assuming this keeps the "Incorrect" message on the screen for two seconds in addition to waiting before returning
+  return;
+}
+
 void menu() {
   fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Press: 1 temp 2 light 3 logout");
@@ -106,6 +114,11 @@ void menu() {
     }
     else if (menuKeyValue == 3 || menuKeyValue == ESC) {
       return;
+    }
+    else {
+      invalidInput();
+      fprintf(lcd, ESC_CLEAR);
+      fprintf(lcd, "Press: 1 temp 2 light 3 logout");
     }
   }
 }
@@ -127,6 +140,11 @@ void tempMenu() { //According to the flow diagram given in the example, you don'
     else if (tempMenuKeyValue == ESC) {
       return;
     }
+    else {
+      invalidInput();
+      fprintf(lcd, ESC_CLEAR);
+      fprintf(lcd, "Press: 1 view current 2 change");
+    }
   }
 }
 
@@ -147,6 +165,11 @@ void lightMenu() { // According to the flow diagram given in the example, you do
     else if (lightMenuKeyValued == ESC) {
       return;
     }
+    else {
+      invalidInput();
+      fprintf(lcd, ESC_CLEAR);
+      fprintf(lcd, "Press: 1 view current 2 change");
+    }
   }
 
 }
@@ -159,19 +182,60 @@ static void tempCurrent(int temp) {
 
 // The temperature setting should range from 0 to 200, and the light settings will be Off (1), Low (2), Medium (3), and (4)
 static int tempChange (void) {
-  int newTemp = getKey();
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "Enter a new temp 0 to 200 deg F:");
+  int newTemp;
+  while(1) {
+    newTemp = getKey();
+    if (newTemp =< 200) {
+      break;
+    }
+    else {
+      invalidInput();
+      fprintf(lcd, ESC_CLEAR);
+      fprintf(lcd, "Enter a new temp 0 to 200 deg F:");
+    }
+  }
   currentTemp = newTemp;
   return newTemp;
-
 }
 
 static void lightCurrent(int light) {
   fprintf(lcd, ESC_CLEAR);
+  switch (currentLight) {
+    case 1:
+      fprintf(lcd, "Current light level: Off");
+      break;
+    case 2:
+      fprintf(lcd, "Current light level: Low");
+      break;
+    case 3:
+      fprintf(lcd, "Current light level: Medium");
+      break;
+    case 4:
+      fprintf(lcd, "Current light level: High");
+      break;
+    default:
+      fprintf(lcd, "Massive Error");
+  }
   return;
 }
 
 static int lightChange() (
-  int newLValue = getKey();
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "Enter light level: 1 off 2 low 3 medium 4 high");
+  int newLValue;
+  while(1) {
+    newLValue = getKey();
+    if (newLValue >=1 && newLValue <=4) {
+      break;
+    }
+    else {
+      invalidInput();
+      fprintf(lcd, ESC_CLEAR);
+      fprintf(lcd, "Enter light level: 1 off 2 low 3 medium 4 high");
+    }
+  }
   currentLight = newLValue;
   return newLValue;
 )
