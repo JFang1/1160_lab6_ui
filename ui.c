@@ -63,11 +63,11 @@ int getKey() {
 }
 
 void logIn() (
-  int i = 1;
+  int loop = 1;
   int logInKeyValue;
   fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Enter Password:");
-  while (i) {
+  while (loop) {
     logInKeyValue = getKey();
     if (logInKeyValue == ESC) {
       return;
@@ -77,7 +77,7 @@ void logIn() (
       logInError();
     }
     else { // then the password was entered correctly--exit while loop
-      i = 0;
+      loop = 0;
       menu(); // This is called here because it should be accessible only to those who enter the password correctly;
     }
   }
@@ -92,10 +92,11 @@ void logInError() {
 }
 
 void menu() {
-  while (1) {
-    fprintf(lcd, ESC_CLEAR);
-    fprintf(lcd, "Press: 1 temp 2 light 3 logout");
-    int menuKeyValue = getKey();
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "Press: 1 temp 2 light 3 logout");
+  int menuKeyValue;
+  while (1 ) {
+    menuKeyValue = getKey();
     if (menuKeyValue == 1) {
       tempMenu();
     }
@@ -108,33 +109,68 @@ void menu() {
   }
 }
 
-void tempMenu() { //According to the flow diagram given in the example, this menu does not loop
+void tempMenu() { //According to the flow diagram given in the example, you don't return to this menu
   fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Press: 1 view current 2 change");
-  return;
+  int tempMenuKeyValue;
+  while(1) {
+    tempMenuKeyValue = getKey();
+    if (tempMenuKeyValue == 1) {
+      tempCurrent();
+      return;
+    }
+    else if (tempMenuKeyValue == 2) {
+      tempChange();
+      return;
+    }
+    else if (tempMenuKeyValue == ESC) {
+      return;
+    }
+  }
 }
 
-void lightMenu() { // According to the flow diagram given in the example, this menu does not loop
+void lightMenu() { // According to the flow diagram given in the example, you don't return to this menu
   fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Press: 1 view current 2 change");
-  return;
+  int lightMenuKeyValue;
+  while(1) {
+    lightMenuKeyValue = getKey();
+    if (lightMenuKeyValue == 1) {
+      lightCurrent();
+      return;
+    }
+    else if (lightMenuKeyValue == 2) {
+      lightChange();
+      return;
+    }
+    else if (lightMenuKeyValued == ESC) {
+      return;
+    }
+  }
+
 }
 
 static void tempCurrent(int temp) {
+  fprintf(lcd, ESC_CLEAR);
+  fprintf("Current temp: %d", currentTemp);
   return;
 }
 
 // The temperature setting should range from 0 to 200, and the light settings will be Off (1), Low (2), Medium (3), and (4)
 static int tempChange (void) {
-  int temp;
-  return temp;
+  int newTemp = getKey();
+  currentTemp = newTemp;
+  return newTemp;
+
 }
 
 static void lightCurrent(int light) {
+  fprintf(lcd, ESC_CLEAR);
   return;
 }
 
-int lightChange() (
-  int value;
-  return value;
+static int lightChange() (
+  int newLValue = getKey();
+  currentLight = newLValue;
+  return newLValue;
 )
