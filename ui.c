@@ -42,9 +42,10 @@ int currentLight = Off;
 
 
 //TODO: Handle the polling, decoding, and debouncing of the keypad--Even then, there still may be hardware needed to be debounced
+// Note: the hardware can handle the polling, decoding, and debouncing of the keypad instead.
 
 int main() {
-  lcd = fopen(COL, "w");  ///////////////TODO: I have no idea if this is right or not
+  lcd = fopen(COL, "w");  ///////////////TODO: I have no idea if opening COL is right or not
   initColumns();
   logIn();
   fprintf(lcd, ESC_CLEAR); //clears the screen
@@ -60,7 +61,7 @@ void initColumns() { /////////////////////TODO What do I do here?????????
 }
 
 int getKey() {
-  int keyValue = fscanf(lcd); ////////////////////// TODO: might need some kind of loop for waiting for user input, and/or getting ALL of the user input
+  int keyValue = fscanf(lcd); ////////////////////// TODO: might need some kind of loop or timer for waiting for user input, and/or getting ALL of the user input
   return keyValue;
 }
 
@@ -183,7 +184,7 @@ static void tempCurrent(int temp) {
 // The temperature setting should range from 0 to 200, and the light settings will be Off (1), Low (2), Medium (3), and (4)
 static int tempChange (void) {
   fprintf(lcd, ESC_CLEAR);
-  fprintf(lcd, "Enter a new temp 0 to 200 deg F:");
+  fprintf(lcd, "Enter temp deg F: 0 Min 200 MAX");
   int newTemp;
   while(1) {
     newTemp = getKey();
@@ -193,7 +194,7 @@ static int tempChange (void) {
     else {
       invalidInput();
       fprintf(lcd, ESC_CLEAR);
-      fprintf(lcd, "Enter a new temp 0 to 200 deg F:");
+      fprintf(lcd, "Enter a temp 0 to 200 deg F:");
     }
   }
   currentTemp = newTemp;
@@ -204,16 +205,16 @@ static void lightCurrent(int light) {
   fprintf(lcd, ESC_CLEAR);
   switch (currentLight) {
     case 1:
-      fprintf(lcd, "Current light level: Off");
+      fprintf(lcd, "Current light: Off");
       break;
     case 2:
-      fprintf(lcd, "Current light level: Low");
+      fprintf(lcd, "Current light: Low");
       break;
     case 3:
-      fprintf(lcd, "Current light level: Medium");
+      fprintf(lcd, "Current light: Medium");
       break;
     case 4:
-      fprintf(lcd, "Current light level: High");
+      fprintf(lcd, "Current light: High");
       break;
     default:
       fprintf(lcd, "Massive Error");
