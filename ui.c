@@ -4,22 +4,23 @@
 #include "system.h"
 #include "altera_avalon_pio_regs.h"
 #include "alt_types.h"
+#include "hello_world.h"
+
 // Cursor movement on the LCD:
 // Start escape sequence
 #define ESC 27
 // Clear screen and position cursor at row 1, column 1 of LCD.
 #define ESC_CLEAR "[2J"
 #define COL IORD_ALTERA_AVALON_PIO_DATA(PIO_IN_BASE)
-#define PASS 1234
+#define PASS 1234///
 
-#include "hello_world.h"
 FILE* lcd;
 // LCD
-volatile int edge_capture;
+volatile int edge_capture;      // TODO: WTF is this?????
 // Edge capture value
-volatile int key = -1;
+volatile int key = -1;          // TODO: Use this
 // Key pressed
-volatile int state = 1;
+volatile int state = 1;         // TODO: Us this too
 // State
 static void initColumns();
 static int getKey();
@@ -33,6 +34,9 @@ static int tempChange (void);
 static void lightCurrent(int light);
 static int lightChange(void);
 
+int currentTemp;
+int currentLight;
+
 
 
 //TODO: Handle the polling, decoding, and debouncing of the keypad--Even then, there still may be hardware needed to be debounced
@@ -41,24 +45,27 @@ int main() {
   lcd = fopen(COL, "w");  ///////////////TODO: I have no idea if this is right or not
   initColumns();
   logIn();
+  fprintf(lcd, ESC_CLEAR); //clears the screen
   fprintf(lcd, "Goodbye!");
-  sleep(2);
+  sleep(2); // I'm assuming that this will keep the "Goodbye!" message on the screen for 2 seconds
+  fprintf(lcd, ESC_CLEAR); //clears the screen
   fclose(lcd);
   return 0;
 }
 
-void initColumns() { /////////////////////TODO
+void initColumns() { /////////////////////TODO What do I do here?????????
   return;
 }
 
 int getKey() {
-  int keyValue = fscanf(lcd);
+  int keyValue = fscanf(lcd); ////////////////////// TODO: might need some kind of loop for waiting for user input, and/or getting ALL of the user input
   return keyValue;
 }
 
 void logIn() (
   int i = 1;
   int logInKeyValue;
+  fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Enter Password:");
   while (i) {
     logInKeyValue = getKey();
@@ -78,31 +85,38 @@ void logIn() (
 )
 
 void logInError() {
+  fprintf(lcd, ESC_CLEAR);
   fprintf(lcd, "Incorrect");
-  sleep(2); // waits for 2 seconds
+  sleep(2); // waits for 2 seconds--I'm assuming this keeps the "Incorrect" message on the screen for two seconds in addition to waiting before returning
   return;
 }
 
 void menu() {
-  fprintf(lcd, "Press: 1 temp 2 light 3 logout");
-  int menuKeyValue = getKey();  ////////////////////// TODO: might need some kind of loop for waiting for user input
-  if (menuKeyValue == 1) {
-    tempMenu();
+  while (1) {
+    fprintf(lcd, ESC_CLEAR);
+    fprintf(lcd, "Press: 1 temp 2 light 3 logout");
+    int menuKeyValue = getKey();
+    if (menuKeyValue == 1) {
+      tempMenu();
+    }
+    else if (menuKeyValue == 2) {
+      lightMenu();
+    }
+    else if (menuKeyValue == 3 || menuKeyValue == ESC) {
+      return;
+    }
   }
-  else if (menuKeyValue == 2) {
-    lightMenu();
-  }
-  else if (menuKeyValue == 3 || menuKeyValue == ESC)
+}
+
+void tempMenu() { //According to the flow diagram given in the example, this menu does not loop
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "Press: 1 view current 2 change");
   return;
 }
 
-void tempMenu() {
-
-  return;
-}
-
-void lightMenu() {
-
+void lightMenu() { // According to the flow diagram given in the example, this menu does not loop
+  fprintf(lcd, ESC_CLEAR);
+  fprintf(lcd, "Press: 1 view current 2 change");
   return;
 }
 
